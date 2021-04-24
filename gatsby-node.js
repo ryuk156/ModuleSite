@@ -98,7 +98,9 @@ exports.createPages = async ({ graphql, actions }) => {
                 slug
               }
               frontmatter {
+                author
                 title
+                date
                 tags
                 category
                 description
@@ -130,7 +132,9 @@ exports.createPages = async ({ graphql, actions }) => {
   posts.forEach(edge => {
     blogList.push({
       path: `/blog${edge.node.fields.slug}`,
+      author: edge.node.frontmatter.author,
       tags: edge.node.frontmatter.tags,
+      date:edge.node.frontmatter.date,
       cover: edge.node.frontmatter.cover,
       title: edge.node.frontmatter.title,
       description: edge.node.frontmatter.description

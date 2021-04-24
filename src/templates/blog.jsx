@@ -19,6 +19,8 @@ export default (
   const postEdges = data.allMarkdownRemark.edges;
   const DATA = blogList;
 
+  console.log(blogList)
+
   const prefix = "/blog/";
   const isFirst = blogCurrentPage === 1;
   const isLast = blogCurrentPage === postsNumPages;
@@ -29,25 +31,36 @@ export default (
   const [isShown, setIsShown] = useState(false);
 
   const [results, setResults] = useState([]);
+  
+  
+  
+
   // eslint-disable-next-line react/destructuring-assignment
   let srcLocation = props.location;
   if (typeof window !== `undefined`) {
     // eslint-disable-next-line no-restricted-globals
     srcLocation = location.search;
   }
+
+
   const searchQuery = new URLSearchParams(srcLocation).get("keywords") || "";
-  var filterTag = new URLSearchParams(srcLocation).get("filter") || "";
+  var Tag = new URLSearchParams(srcLocation).get("tag") || "";
+  var Author = new URLSearchParams(srcLocation).get("author") || "";
+  
   function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   }
 
+
+
   useEffect(() => {
-    if (searchQuery || filterTag) {
+    if (searchQuery || Tag) {
       setResults(
         DATA.filter((blog) => {
           const searchRgx = new RegExp(escapeRegExp(searchQuery), "gi");
-          const tagRgx = new RegExp(escapeRegExp(filterTag), "gi");
-          return blog.tags.match(tagRgx) && blog.title.match(searchRgx);
+          const tagRgx = new RegExp(escapeRegExp(Tag), "gi");
+          const authorRgx = new RegExp(escapeRegExp(Author), "gi");
+          return  blog.title.match(searchRgx) && blog.tags.match(tagRgx) || blog.author.match(authorRgx);
         })
       );
       setIsShown(true);
@@ -62,12 +75,13 @@ export default (
       <div className="index-container">
         <Helmet title={`Blog | ${config.siteTitle}`} />
         <SEO />
-        <SearchForm query={searchQuery} filter={filterTag} />
+        <SearchForm query={searchQuery} filter={Tag} />
         {isShown && (
           <SearchResults
             id="src"
             query={searchQuery}
-            filter={filterTag}
+            tag={Tag}
+            author={Author}
             results={results}
           />
         )}
@@ -114,11 +128,12 @@ export const blogQuery = graphql`
         node {
           fields {
             slug
-            date
           }
-          excerpt(format: PLAIN, pruneLength: 150, truncate: true)
+          excerpt(format: PLAIN, pruneLength: 120, truncate: true)
           timeToRead
           frontmatter {
+            author
+            date
             title
             tags
             description

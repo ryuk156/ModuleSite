@@ -10,10 +10,11 @@ export default ({ id, postEdges }) => {
     postEdges.forEach((postEdge) => {
       postList.push({
         path: postEdge.node.fields.slug,
+        author: postEdge.node.frontmatter.author,
         tags: postEdge.node.frontmatter.tags,
         cover: postEdge.node.frontmatter.cover,
         title: postEdge.node.frontmatter.title,
-        date: postEdge.node.fields.date,
+        date: postEdge.node.frontmatter.date,
         desc: postEdge.node.frontmatter.description,
         excerpt: postEdge.node.excerpt,
         timeToRead: postEdge.node.timeToRead,
@@ -22,6 +23,8 @@ export default ({ id, postEdges }) => {
     return postList;
   };
   const postList = getPostList();
+
+  console.log(postList)
   return (
     <Col lg="12">
       <Row className="justify-content-center">
@@ -37,6 +40,8 @@ export default ({ id, postEdges }) => {
                 <div className="md-tag mt-3 ml-3">
                   <Badge>{post.tags}</Badge>
                 </div>
+               
+
               </Col>
 
               <div className="d-flex flex-column ml-3">
@@ -44,7 +49,10 @@ export default ({ id, postEdges }) => {
                 <div className="mt-auto mr-2" lang="en">
                   <p className="word-break">{post.excerpt}</p>
                 </div>
-
+                <div className="md-tag mt-0 ml-1">
+               <p><b>By: </b>{post.author}</p>
+               <p><b>Posted on: </b>{post.date}</p>
+                </div>
                 <div className="mt-auto mb-4">
                   <Link
                     to={`/${id}${post.path}`}

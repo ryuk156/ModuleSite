@@ -26,7 +26,7 @@ const SearchResults = ({ query, filter, results }) => (
     </h4>
     {!!results.length && (
       <Row className="equal">
-        {results.map(({ title, path, cover, description, tags }) => (
+        {results.map(({ title, path, cover, description, tags,author }) => (
           <Col md="4">
             <div className="card-content">
               <div className="card-img">
@@ -35,6 +35,9 @@ const SearchResults = ({ query, filter, results }) => (
               <div className="card-desc">
                 <div className="md-tag">
                   <Badge>{tags}</Badge>
+                </div>
+                <div className="md-tag">
+                  <h6>By: {author}</h6>
                 </div>
                 <h4 className="post-content">{title}</h4>
                 <p>{description}</p>
