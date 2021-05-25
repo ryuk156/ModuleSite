@@ -24,7 +24,7 @@ pipeline {
             steps {
                    echo 'build checks'
                 sh'yarn install'
-                sh 'yarn run build '
+               
                  
             }
         }
