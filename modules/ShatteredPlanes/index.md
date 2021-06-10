@@ -1,0 +1,16 @@
+---
+posttype:  "module"  
+title: "Shattered Planes"
+author: "The Terasology Foundation"
+logo: "./logo.png"
+Tag: "World"
+---
+Shattered Planes
+=======================
+
+![sc1](/images/updatescreen5.jpg)
+![sc2](/images/updatescreen6.jpg)
+old screenshots:  
+
+![sc3](/images/updatescreen3.jpg)
+![sc4](/images/updatescreen4.jpg)
