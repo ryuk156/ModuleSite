@@ -58,7 +58,7 @@ const About = (props) => {
               various types of gameplay settings in a voxel world. The creators
               and maintainers are a diverse mix of software developers,
               designers, game testers, graphic artists, and musicians. We
-              encourage others to join
+              encourage others 
             </p>
           </Col>
         </Row>
