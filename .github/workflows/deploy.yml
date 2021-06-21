@@ -14,6 +14,7 @@ jobs:
         with:
           access-token: ${{ secrets.DEPLOY_TOKEN }}
           deploy-branch: deployment-test
+          gatsby-args: --prefix-paths
 
   
  
