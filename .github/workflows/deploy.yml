@@ -3,7 +3,7 @@ name: Gatsby Publish
 on:
   push:
     branches:
-      - deploy-gh-action
+      - master
 
 jobs:
   build:
@@ -12,9 +12,6 @@ jobs:
       - uses: actions/checkout@v1
       - uses: enriikke/gatsby-gh-pages-action@v2
         with:
-          access-token: ${{ secrets.DEPLOY_TOKEN }}
-          deploy-branch: deployment-test
+          access-token: ${{ secrets.MODULESITE_DEPLOY_TOKEN }}
+          deploy-branch: deploy
           gatsby-args: --prefix-paths
-
-  
- 
