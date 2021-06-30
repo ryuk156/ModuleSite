@@ -109,3 +109,7 @@ section {
   -ms-hyphens: auto;
   hyphens: auto;
 }
+
+.modal{
+  z-index: 9999 !important;
+}

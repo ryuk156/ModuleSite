@@ -66,6 +66,17 @@ const Header = () => {
             <NavItem>
               <NavLink>
                 <Link
+                  to="/mentor"
+                  className="text-color"
+                  activeClassName="active"
+                >
+                  Mentors
+                </Link>
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink>
+                <Link
                   to="/modules"
                   className="text-color"
                   activeClassName="active"
