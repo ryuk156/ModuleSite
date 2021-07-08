@@ -20,7 +20,7 @@ for line in getModules.split():
 
 # Collect modules
 for module in range(len(modules)):
-    if(module < 2):
+    if(module < 3):
         repository = user.get_repo(modules[module])
 
         # Fetch module Information
