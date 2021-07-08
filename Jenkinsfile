@@ -26,15 +26,13 @@ pipeline {
     stages {
         stage('gather data') {
             steps {
-                sh 'python3 ./scrape.py'
-                sh 'python3 ./frontmatter.py'
+                sh 'rm -R modules'
+                sh 'python3 ./module-generation/scrape.py'
+                sh 'python3 ./module-generation/frontmatter.py'
             }
         }
 
         stage('Check Data') {
-            when {
-                expression { currentBuild.previousBuild }
-            }
             steps {
                 sh 'mkdir -p artifacts'
             }
@@ -50,7 +48,7 @@ pipeline {
                         if (value == true) {
                             println('Archiving new meta-data...')
                             archiveArtifacts artifacts: 'modules/**/*.*', fingerprint: true
-                            sh 'bash ./loadModules.sh'
+                            sh 'bash ./module-generation/loadModules.sh'
                            }else {
                             println('None of the required files were updated. Skipping archiving meta-data...')
                             archiveArtifacts artifacts: 'modules/**/*.*', fingerprint: true
@@ -61,7 +59,7 @@ pipeline {
                     script {
                         println("$err")
                         archiveArtifacts artifacts: 'modules/**/*.*', fingerprint: true
-                        sh 'bash ./loadModules.sh'
+                        sh 'bash ./module-generation/loadModules.sh'
                     }
                 }
             }
