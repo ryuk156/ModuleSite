@@ -1,8 +1,8 @@
 import os
 import json
 
-moduleDirs = "../scrape-data/"
-moduleDst = "../modules/"
+moduleDirs = "./scrape-data/"
+moduleDst = "./modules/"
 os.mkdir(moduleDst)
 
 for moduleDir in os.listdir(moduleDirs):

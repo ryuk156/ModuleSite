@@ -3,8 +3,8 @@ import json
 import requests
 from github import Github
 
-indexDir = "../scrape-data/"
-# os.mkdir(indexDir)
+indexDir = "./scrape-data/"
+os.mkdir(indexDir)
 
 accessToken = os.environ.get('GIT_TOKEN')
 g = Github(accessToken)
@@ -59,9 +59,9 @@ for module in range(len(modules)):
             imageFile.close()
         else:
             print("No banner found on "+ moduleName+",resolving with default banner")
-            # sourceImage=open("./module-generation/defaultBanner.png", "rb+")
-            # readSourceImage=sourceImage.read()
-            # defaultImageFile = open(moduleDirSrc+"/cover.png", "wb+")
-            # defaultImageFile.write(readSourceImage)
-            # defaultImageFile.close()
+            sourceImage=open("defaultBanner.png", "rb+")
+            readSourceImage=sourceImage.read()
+            defaultImageFile = open(moduleDirSrc+"/cover.png", "wb+")
+            defaultImageFile.write(readSourceImage)
+            defaultImageFile.close()
             
