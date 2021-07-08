@@ -26,8 +26,8 @@ pipeline {
     stages {
         stage('gather data') {
             steps {
-             
-                
+              cleanWs()
+                sh 'rm -R modules'
                 sh 'python3 ./module-generation/scrape.py'
                 sh 'python3 ./module-generation/frontmatter.py'
             }

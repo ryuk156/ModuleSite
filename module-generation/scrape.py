@@ -59,7 +59,7 @@ for module in range(len(modules)):
             imageFile.close()
         else:
             print("No banner found on "+ moduleName+",resolving with default banner")
-            sourceImage=open("defaultBanner.png", "rb+")
+            sourceImage=open("./module-generation/defaultBanner.png", "rb+")
             readSourceImage=sourceImage.read()
             defaultImageFile = open(moduleDirSrc+"/cover.png", "wb+")
             defaultImageFile.write(readSourceImage)
