@@ -26,7 +26,7 @@ pipeline {
     stages {
         stage('gather data') {
             steps {
-              
+               cleanWs()
                 sh 'rm -R modules'
                 sh 'python3 ./module-generation/scrape.py'
                 sh 'python3 ./module-generation/frontmatter.py'
@@ -34,9 +34,7 @@ pipeline {
         }
 
         stage('Check Data') {
-             when {
-                expression { currentBuild.previousBuild }
-             }
+            
             steps {
                 sh 'mkdir -p artifacts'
             }
@@ -61,7 +59,7 @@ pipeline {
                 }
                 failure {
                     script {
-                      
+                        println("no past build found")
                         archiveArtifacts artifacts: 'modules/**/*.*', fingerprint: true
                        
                     }
