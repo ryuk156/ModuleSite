@@ -26,7 +26,7 @@ pipeline {
     stages {
         stage('gather data') {
             steps {
-              
+                cleanWs()
                 sh 'rm -R modules'
                 sh 'python3 ./module-generation/scrape.py'
                 sh 'python3 ./module-generation/frontmatter.py'
@@ -34,15 +34,12 @@ pipeline {
         }
 
         stage('Check Data') {
-            
             steps {
                 sh 'mkdir -p artifacts'
-            }
 
-            post {
-                always {
-                    script {
-                            copyArtifacts(projectName: currentBuild.projectName,
+                script {
+                    try {
+                        copyArtifacts(projectName: currentBuild.projectName,
                             target: 'artifacts',
                             selector: lastSuccessful())
 
@@ -50,18 +47,15 @@ pipeline {
                         if (value == true) {
                             println('Archiving new meta-data...')
                             archiveArtifacts artifacts: 'modules/**/*.*', fingerprint: true
-                            
+                            sh 'bash ./module-generation/loadModules.sh'
                            }else {
                             println('None of the required files were updated. Skipping archiving meta-data...')
                             archiveArtifacts artifacts: 'modules/**/*.*', fingerprint: true
                         }
-                    }
-                }
-                failure {
-                    script {
-                        println("no past build found")
+                    }catch (err) {
+                        println("$err")
                         archiveArtifacts artifacts: 'modules/**/*.*', fingerprint: true
-                       
+                        sh 'bash ./module-generation/loadModules.sh'
                     }
                 }
             }
