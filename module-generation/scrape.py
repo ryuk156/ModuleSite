@@ -4,7 +4,7 @@ import requests
 from github import Github
 
 indexDir = "../scrape-data/"
-os.mkdir(indexDir)
+# os.mkdir(indexDir)
 
 accessToken = os.environ.get('GIT_TOKEN')
 g = Github(accessToken)
