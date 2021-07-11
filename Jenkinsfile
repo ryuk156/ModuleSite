@@ -6,10 +6,11 @@ pipeline {
     stages {
         stage('gather data') {
             steps {
-                cleanWs()
+                
                 sh 'rm -r modules'
                 sh 'python3 ./module-generation/scrape.py'
                 sh 'python3 ./module-generation/frontmatter.py'
+                sh 'rm -r scrape-data'
             }
         }
         stage('Check Data') {
