@@ -4,6 +4,11 @@ const fs = require("fs");
 const moment = require("moment");
 const path = require("path");
 const siteConfig = require("./data/SiteConfig");
+const { createCanvas, loadImage, registerFont } = require("canvas");
+registerFont("./static/fonts/PressStart2P-Regular.tff", {
+  family: "Press Start 2P",
+});
+
 
 exports.onCreateNode = ({ node, actions, getNode }) => {
   const { createNodeField } = actions;
@@ -35,14 +40,14 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
         createNodeField({
           node,
           name: "date",
-          value: date.toISOString()
+          value: date.toISOString(),
         });
       }
     }
     createNodeField({
       node,
       name: "slug",
-      value: slug
+      value: slug,
     });
   }
 };
@@ -70,6 +75,7 @@ exports.createPages = async ({ graphql, actions }) => {
                 posttype
                 cover {
                   publicURL
+                  relativePath
                   childImageSharp {
                     gatsbyImageData
                   }
@@ -107,9 +113,11 @@ exports.createPages = async ({ graphql, actions }) => {
                 tags
                 category
                 description
+                date
                 posttype
                 cover {
                   publicURL
+                  relativePath
                   childImageSharp {
                     gatsbyImageData
                   }
@@ -127,30 +135,120 @@ exports.createPages = async ({ graphql, actions }) => {
     throw blogQueryResult.errors;
   }
 
-  fs.mkdir('src/generated', (err) => {
+  fs.mkdir("src/generated", (err) => {
     if (err) {
       return console.log(err);
     }
-  console.log("Directory created successfully!");
+    console.log("Directory created successfully!");
   });
 
   const posts = blogQueryResult.data.allMarkdownRemark.edges;
-  posts.forEach(edge => {
+  posts.forEach((edge,index) => {
     blogList.push({
       path: `/blog${edge.node.fields.slug}`,
       tags: edge.node.frontmatter.tags,
       cover: edge.node.frontmatter.cover,
       title: edge.node.frontmatter.title,
       excerpt: edge.node.excerpt,
-      description: edge.node.frontmatter.description
+      description: edge.node.frontmatter.description,
     });
+    const canvas = createCanvas(800, 600);
+    const ctx = canvas.getContext("2d");
+    loadImage("./blog/" + edge.node.frontmatter.cover.relativePath).then(
+      (image) => {
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+        let postid = "#12";
+
+       
+        
+        ctx.font = '50px "Press Start 2P"';
+
+        spacer = ctx.measureText("Tera").width + 52;
+
+        // Generate Drop Shadow
+        ctx.lineWidth = 8;
+        ctx.strokeStyle = "#004e33";
+        ctx.strokeText("Tera", 50, 170);
+
+        ctx.globalCompositeOperation = "destination-over";
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+        ctx.strokeText("sology", spacer, 170);
+
+        // Generate Stroke
+        ctx.globalCompositeOperation = "source-over";
+        ctx.strokeStyle = "#92f152";
+        ctx.strokeText("Tera", 50, 160);
+
+        ctx.globalCompositeOperation = "xor";
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+        ctx.strokeText("sology", spacer, 160);
+
+        // Generate Main Text
+        ctx.globalCompositeOperation = "source-over";
+        ctx.fillStyle = "#2c8f33";
+        ctx.fillText("Tera", 50, 160);
+
+        ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+        ctx.globalCompositeOperation = "xor";
+        ctx.fillText("sology", spacer, 160);
+
+        ctx.globalCompositeOperation = "source-over";
+        ctx.translate(0, -10);
+        ctx.rotate(25);
+        ctx.font = '40px "Press Start 2P"';
+        ctx.strokeStyle = "#fff";
+
+        ctx.strokeText("Saturday", spacer - 10, 255);
+        ctx.strokeText("Saturday", spacer - 10, 245);
+        ctx.strokeText("Saturday", spacer - 10, 240);
+        ctx.strokeText("Saturday", spacer - 10, 235);
+        ctx.strokeText("Saturday", spacer - 10, 230);
+
+        ctx.fillStyle = "#2e0350";
+        ctx.fillText("Saturday", spacer - 10, 250);
+        ctx.fillStyle = "#7b00a3";
+        ctx.fillText("Saturday", spacer - 10, 245);
+        ctx.fillStyle = "#bc00c4";
+        ctx.fillText("Saturday", spacer - 10, 240);
+        ctx.fillStyle = "#f549f5";
+        ctx.fillText("Saturday", spacer - 10, 235);
+        ctx.fillStyle = "#ffb2ff";
+        ctx.fillText("Saturday", spacer - 10, 230);
+
+        let pst_spacer =
+          ctx.measureText("sology").width - ctx.measureText(postid).width + 70;
+
+        ctx.strokeText(postid, pst_spacer + spacer, 255 + 50);
+        ctx.strokeText(postid, pst_spacer + spacer, 245 + 50);
+        ctx.strokeText(postid, pst_spacer + spacer, 240 + 50);
+        ctx.strokeText(postid, pst_spacer + spacer, 235 + 50);
+        ctx.strokeText(postid, pst_spacer + spacer, 230 + 50);
+        ctx.fillStyle = "#2e0350";
+        ctx.fillText(postid, pst_spacer + spacer, 255 + 50);
+        ctx.fillStyle = "#7b00a3";
+        ctx.fillText(postid, pst_spacer + spacer, 245 + 50);
+        ctx.fillStyle = "#bc00c4";
+        ctx.fillText(postid, pst_spacer + spacer, 240 + 50);
+        ctx.fillStyle = "#f549f5";
+        ctx.fillText(postid, pst_spacer + spacer, 235 + 50);
+        ctx.fillStyle = "#ffb2ff";
+        ctx.fillText(postid, pst_spacer + spacer, 230 + 50);
+
+        ctx.restore();
+
+        let buffer = canvas.toBuffer("image/png");
+        fs.writeFileSync("./blog/"+edge.node.frontmatter.date+"/cover.jpg", buffer);
+      }
+    );
   });
+
   const blogJSON = JSON.stringify(blogList, null, 2);
   fs.writeFileSync("./src/generated/blog-result.json", blogJSON);
   const postsPerPage = 6;
   const postsNumPages = Math.ceil(posts.length / postsPerPage);
   Array.from({
-    length: postsNumPages
+    length: postsNumPages,
     // eslint-disable-next-line no-shadow
   }).forEach((_, i) => {
     createPage({
@@ -160,8 +258,8 @@ exports.createPages = async ({ graphql, actions }) => {
         limit: postsPerPage,
         skip: i * postsPerPage,
         postsNumPages,
-        blogCurrentPage: i + 1
-      }
+        blogCurrentPage: i + 1,
+      },
     });
   });
 
@@ -185,6 +283,7 @@ exports.createPages = async ({ graphql, actions }) => {
                 posttype
                 cover {
                   publicURL
+                  relativePath
                   childImageSharp {
                     gatsbyImageData
                   }
@@ -203,14 +302,14 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
   const modules = moduleQueryResult.data.allMarkdownRemark.edges;
-  modules.forEach(edge => {
+  modules.forEach((edge) => {
     moduleList.push({
       path: `/modules${edge.node.fields.slug}`,
       tags: edge.node.frontmatter.tags,
       cover: edge.node.frontmatter.cover,
       title: edge.node.frontmatter.title,
       date: edge.node.frontmatter.date,
-      excerpt: edge.node.excerpt
+      excerpt: edge.node.excerpt,
     });
   });
   const moduleJSON = JSON.stringify(moduleList, null, 2);
@@ -218,7 +317,7 @@ exports.createPages = async ({ graphql, actions }) => {
   const modulesPerPage = 6;
   const moduleNumPages = Math.ceil(modules.length / modulesPerPage);
   Array.from({
-    length: moduleNumPages
+    length: moduleNumPages,
     // eslint-disable-next-line no-shadow
   }).forEach((_, i) => {
     createPage({
@@ -228,8 +327,8 @@ exports.createPages = async ({ graphql, actions }) => {
         limit: modulesPerPage,
         skip: i * modulesPerPage,
         moduleNumPages,
-        moduleCurrentPage: i + 1
-      }
+        moduleCurrentPage: i + 1,
+      },
     });
   });
 
@@ -266,8 +365,8 @@ exports.createPages = async ({ graphql, actions }) => {
         component: modulesPage,
         context: {
           slug: edge.node.fields.slug,
-          category: edge.node.frontmatter.category
-        }
+          category: edge.node.frontmatter.category,
+        },
       });
     } else {
       // blog post
@@ -276,8 +375,8 @@ exports.createPages = async ({ graphql, actions }) => {
         component: postPage,
         context: {
           slug: edge.node.fields.slug,
-          category: edge.node.frontmatter.category
-        }
+          category: edge.node.frontmatter.category,
+        },
       });
     }
   });
