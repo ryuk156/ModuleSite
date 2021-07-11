@@ -7,15 +7,15 @@ pipeline {
         stage('gather data') {
             steps {
                 sh 'rm -r modules'
-                sh 'python3 ./scrape.py'
-                sh 'python3 ./frontmatter.py'
+                sh 'python3 ./module-generation/scrape.py'
+                sh 'python3 ./module-generation/frontmatter.py'
             }
         }
         stage('Check Data') {
             steps {
                 script {
                     try {
-                        sh 'bash ./loadModules.sh'
+                        sh 'bash ./module-generation/loadModules.sh'
                     } catch (err) {
                         println("$err")
                     }
